@@ -32,12 +32,29 @@ async def lifespan(app: FastAPI):
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
 
-    # Inicializa configurações padrão
+    # Inicializa configurações padrão e cria usuário inicial se não existir
     from app.core.database.engine import AsyncSessionLocal
     from app.repositories.setting_repository import SettingRepository
+    from app.repositories.user_repository import UserRepository
+    from app.core.security.password import hash_password
+    
     async with AsyncSessionLocal() as session:
-        repo = SettingRepository(session)
-        await repo.initialize_defaults()
+        # Cria/Atualiza configurações
+        repo_settings = SettingRepository(session)
+        await repo_settings.initialize_defaults()
+        
+        # Cria usuário joao automaticamente na nuvem se não existir
+        repo_user = UserRepository(session)
+        user = await repo_user.get_by_username("joao")
+        if not user:
+            await repo_user.create(
+                username="joao",
+                email="joao@mlautoresponder.com",
+                hashed_password=hash_password("2468"),
+                is_admin=True
+            )
+            logger.info("Usuário 'joao' criado automaticamente!")
+            
         await session.commit()
 
     logger.info("✅ Banco de dados inicializado")
