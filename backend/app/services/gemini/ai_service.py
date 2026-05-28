@@ -43,8 +43,6 @@ async def generate_response(
         response = await model.generate_content_async(
             prompt,
             generation_config=genai.types.GenerationConfig(
-                max_output_tokens=max_tokens or settings.GEMINI_MAX_TOKENS,
-
                 temperature=settings.GEMINI_TEMPERATURE,
             )
         )
@@ -54,6 +52,8 @@ async def generate_response(
 
     response_text = response.text if response.parts else ""
     tokens_used = response.usage_metadata.total_token_count if hasattr(response, 'usage_metadata') else 0
+    finish_reason = getattr(response.candidates[0], "finish_reason", "unknown") if response.candidates else "no_candidates"
+    logger.info("Finish reason: %s, max_tokens configured: %s", finish_reason, max_tokens or settings.GEMINI_MAX_TOKENS)
 
     # Calcula score aproximado de confiança (Gemini não expõe prob token por token da mesma forma que logprobs na mesma camada, mockamos 0.85 por enquanto)
     confidence = 0.85
