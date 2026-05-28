@@ -1,6 +1,6 @@
 import { useEffect, useRef, useCallback, useState } from 'react'
 
-const WS_URL = `${location.protocol === 'https:' ? 'wss' : 'ws'}://${location.host}/ws/updates`
+const WS_URL = import.meta.env.VITE_WS_URL || `${location.protocol === 'https:' ? 'wss' : 'ws'}://${location.host}/ws/updates`
 const RECONNECT_DELAY = 3000
 
 /**

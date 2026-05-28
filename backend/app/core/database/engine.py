@@ -15,14 +15,18 @@ from app.core.logger.logger import get_logger
 
 logger = get_logger(__name__)
 
-if settings.DATABASE_URL.startswith("sqlite"):
+db_url = settings.DATABASE_URL
+if db_url.startswith("postgres://"):
+    db_url = db_url.replace("postgres://", "postgresql+asyncpg://", 1)
+
+if db_url.startswith("sqlite"):
     engine = create_async_engine(
-        settings.DATABASE_URL,
+        db_url,
         echo=settings.DEBUG,
     )
 else:
     engine = create_async_engine(
-        settings.DATABASE_URL,
+        db_url,
         pool_size=settings.DATABASE_POOL_SIZE,
         max_overflow=settings.DATABASE_MAX_OVERFLOW,
         pool_timeout=settings.DATABASE_POOL_TIMEOUT,

@@ -124,7 +124,7 @@ export default function Settings() {
           <p className="text-xs text-slate-500">
             A IA responde <strong className="text-slate-800">somente fora</strong> deste período.
           </p>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="text-xs text-slate-500 block mb-1.5">Início (hora)</label>
               <input

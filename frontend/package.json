@@ -2,6 +2,7 @@
   "name": "ml-autoresponder-frontend",
   "version": "1.0.0",
   "private": true,
+  "homepage": "https://rcar-place.github.io/ia-rcar",
   "type": "module",
   "scripts": {
     "dev": "vite",

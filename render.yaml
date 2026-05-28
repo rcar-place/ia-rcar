@@ -1,0 +1,27 @@
+services:
+  - type: web
+    name: ia-rcar-backend
+    env: python
+    rootDir: backend
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "gunicorn app.main:app -w 1 -k uvicorn.workers.UvicornWorker"
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: ia-rcar-db
+          property: connectionString
+      - key: FRONTEND_URL
+        value: "https://rcar-place.github.io"
+      - key: SECRET_KEY
+        generateValue: true
+      - key: ML_APP_ID
+        sync: false
+      - key: ML_CLIENT_SECRET
+        sync: false
+      - key: GEMINI_API_KEY
+        sync: false
+
+databases:
+  - name: ia-rcar-db
+    databaseName: iarcardb
+    user: iardbuser
