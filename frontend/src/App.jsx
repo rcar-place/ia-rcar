@@ -9,31 +9,10 @@ import Login from './pages/Login'
 import TestAgent from './pages/TestAgent'
 import { useAuthStore } from './services/auth'
 
-function PrivateRoute({ children }) {
-  const { isAuthenticated } = useAuthStore()
-  return isAuthenticated ? children : <Navigate to="/login" replace />
-}
-
 export default function App() {
-  const { isAuthenticated, loadUser } = useAuthStore()
-
-  useEffect(() => {
-    if (isAuthenticated) {
-      loadUser()
-    }
-  }, [])
-
   return (
     <Routes>
-      <Route path="/login" element={<Login />} />
-      <Route
-        path="/"
-        element={
-          <PrivateRoute>
-            <MainLayout />
-          </PrivateRoute>
-        }
-      >
+      <Route path="/" element={<MainLayout />}>
         <Route index element={<Dashboard />} />
         <Route path="messages" element={<Messages />} />
         <Route path="test-agent" element={<TestAgent />} />

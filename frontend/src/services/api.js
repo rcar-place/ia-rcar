@@ -17,30 +17,10 @@ api.interceptors.request.use((config) => {
   return config
 })
 
-// Trata expiração de token
+// Trata expiração de token (desativado pois não há login)
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
-    if (error.response?.status === 401) {
-      const refreshToken = localStorage.getItem('refresh_token')
-      if (refreshToken) {
-        try {
-          const { data } = await axios.post(`${BASE_URL}/auth/refresh`, {
-            refresh_token: refreshToken,
-          })
-          localStorage.setItem('access_token', data.access_token)
-          localStorage.setItem('refresh_token', data.refresh_token)
-          error.config.headers.Authorization = `Bearer ${data.access_token}`
-          return api.request(error.config)
-        } catch {
-          localStorage.clear()
-          window.location.href = '/login'
-        }
-      } else {
-        localStorage.clear()
-        window.location.href = '/login'
-      }
-    }
     return Promise.reject(error)
   }
 )
